@@ -41,4 +41,4 @@ $(EXEC) : $(OBJ)
     $(CC) -o $@ $^
 
 clean :
-    em -rf *.o
+    rm -rf *.o

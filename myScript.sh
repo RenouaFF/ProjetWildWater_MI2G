@@ -20,6 +20,25 @@ then
     exit 1
 fi
 
+# mémoriser le dossier courant
+ROOT_DIR=$(pwd)
+
+# créer tmp s'il n'existe pas
+if [ ! -d "tmp" ]; then
+    mkdir tmp
+fi
+
+# créer graphs s'il n'existe pas
+if [ ! -d "graphs" ]; then
+    mkdir graphs
+fi
+
+#verif gnuplot installe
+if ! command -v gnuplot >/dev/null 2>&1; then
+    echo "Erreur : gnuplot n'est pas installé"
+    exit 1
+fi
+
 # verifier si le C existe
 #if [ ! -f principal ]; then
 #   echo "Erreur: le fichier prog n'existe pas"
@@ -75,6 +94,15 @@ fi
 if [ $retour -ne 0 ]; then
     echo "Erreur: échec"
     exit 1
+fi
+
+#creation csv
+if [ "$2" = "histo" ] && [ -f "histo_$3.csv"]; then
+    mv "histo_$3.csv" tmp/
+fi
+
+if [ "$2" = "leaks" ] && [ -f "leak.dat"]; then
+    mv "leaks.dat" tmp/
 fi
 
 
