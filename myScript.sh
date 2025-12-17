@@ -97,14 +97,67 @@ if [ $retour -ne 0 ]; then
 fi
 
 #creation csv
-if [ "$2" = "histo" ] && [ -f "histo_$3.csv"]; then
+if [ "$2" = "histo" ] && [ -f "histo_$3.csv" ]; then
     mv "histo_$3.csv" tmp/
 fi
 
-if [ "$2" = "leaks" ] && [ -f "leak.dat"]; then
+if [ "$2" = "leaks" ] && [ -f "leaks.dat" ]; then
     mv "leaks.dat" tmp/
 fi
 
+#flitrage
+if [ "$2" = "histo" ]; then
+	tail -n +2 "tmp/histo_$3.csv" > "tmp/histo_${3}_filtered.csv"
+
+	# tri par valeur (colonne 2)
+	sort -t ';' -k2 -n "tmp/histo_${3}_filtered.csv" > "tmp/histo_${3}_sorted.csv"
+
+	# 50 plus petites usines
+	head -n 50 "tmp/histo_${3}_sorted.csv" > "tmp/histo_${3}_small.csv"
+
+	# 10 plus grandes usines
+	tail -n 10 "tmp/histo_${3}_sorted.csv" > "tmp/histo_${3}_big.csv"
+
+if [ -s "tmp/histo_${3}_small.csv" ]; then
+
+cat > "tmp/plot_${3}_small.gp" << EOF
+set terminal png size 1000,600
+set output "graphs/histo_${3}_small.png"
+set datafile separator ";"
+set style data histograms
+set style fill solid
+set boxwidth 0.8
+set xtics rotate by -45
+set title "Histogramme $3 - 50 plus petites usines"
+plot "tmp/histo_${3}_small.csv" using 2:xtic(1) notitle
+EOF
+
+gnuplot "tmp/plot_${3}_small.gp"
+
+fi
+
+
+if [ -s "tmp/histo_${3}_big.csv" ]; then
+
+cat > "tmp/plot_${3}_big.gp" << EOF
+set terminal png size 1000,600
+set output "graphs/histo_${3}_big.png"
+set datafile separator ";"
+set style data histograms
+set style fill solid
+set boxwidth 0.8
+set xtics rotate by -45
+set title "Histogramme $3 - 10 plus grandes usines"
+plot "tmp/histo_${3}_big.csv" using 2:xtic(1) notitle
+EOF
+
+gnuplot "tmp/plot_${3}_big.gp"
+
+fi
+
+fi
+
+cd "$ROOT_DIR"
 
 stop=$(date +%s)
 duree=$((stop - start))
