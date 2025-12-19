@@ -113,23 +113,23 @@ if [ "$2" = "histo" ]; then
 	sort -t ';' -k2 -n "tmp/histo_${3}_filtered.csv" > "tmp/histo_${3}_sorted.csv"
 
 	# 50 plus petites usines
-	head -n 50 "tmp/histo_${3}_sorted.csv" > "tmp/histo_${3}_small.csv"
+	head -n 50 "tmp/histo_${3}_sorted.csv" > "tmp/histo_${3}_petit.csv"
 
 	# 10 plus grandes usines
-	tail -n 10 "tmp/histo_${3}_sorted.csv" > "tmp/histo_${3}_big.csv"
+	tail -n 10 "tmp/histo_${3}_sorted.csv" > "tmp/histo_${3}_grand.csv"
 
-if [ -s "tmp/histo_${3}_small.csv" ]; then
+if [ -s "tmp/histo_${3}_petit.csv" ]; then
 
-cat > "tmp/plot_${3}_small.gp" << EOF
+cat > "tmp/plot_${3}_petit.gp" << EOF
 set terminal png size 1000,600
-set output "graphs/histo_${3}_small.png"
+set output "graphs/histo_${3}_petit.png"
 set datafile separator ";"
 set style data histograms
 set style fill solid
 set boxwidth 0.8
 set xtics rotate by -45
 set title "Histogramme $3 - 50 plus petites usines"
-plot "tmp/histo_${3}_small.csv" using 2:xtic(1) notitle
+plot "tmp/histo_${3}_petit.csv" using 2:xtic(1) notitle
 EOF
 
 gnuplot "tmp/plot_${3}_small.gp"
@@ -137,21 +137,21 @@ gnuplot "tmp/plot_${3}_small.gp"
 fi
 
 
-if [ -s "tmp/histo_${3}_big.csv" ]; then
+if [ -s "tmp/histo_${3}_grand.csv" ]; then
 
 cat > "tmp/plot_${3}_big.gp" << EOF
 set terminal png size 1000,600
-set output "graphs/histo_${3}_big.png"
+set output "graphs/histo_${3}_grand.png"
 set datafile separator ";"
 set style data histograms
 set style fill solid
 set boxwidth 0.8
 set xtics rotate by -45
 set title "Histogramme $3 - 10 plus grandes usines"
-plot "tmp/histo_${3}_big.csv" using 2:xtic(1) notitle
+plot "tmp/histo_${3}_grand.csv" using 2:xtic(1) notitle
 EOF
 
-gnuplot "tmp/plot_${3}_big.gp"
+gnuplot "tmp/plot_${3}_grand.gp"
 
 fi
 
