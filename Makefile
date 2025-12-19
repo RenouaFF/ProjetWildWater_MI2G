@@ -1,4 +1,4 @@
-#Makefile 1:
+/* #Makefile 1:
 
 #prog est l'executable
 all : prog 
@@ -41,4 +41,23 @@ $(EXEC) : $(OBJ)
     $(CC) -o $@ $^
 
 clean :
-    rm -rf *.o
+    rm -rf *.o */
+
+CC = gcc
+CFLAGS = -Wall -Wextra -Iheaders
+EXEC = principal
+
+SRC = $(wildcard src/*.c)
+OBJ = $(SRC:.c=.o)
+
+all: $(EXEC)
+
+$(EXEC): $(OBJ)
+	$(CC) -o $@ $^
+
+src/%.o: src/%.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+clean:
+	rm -f src/*.o $(EXEC)
+
