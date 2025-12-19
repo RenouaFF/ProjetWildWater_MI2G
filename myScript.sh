@@ -75,7 +75,7 @@ if [ "$2" = "histo" ]; then
         echo "Erreur, mauvais type d'histo, veuillez saisir: max, src ou real"
         exit 2
     fi
-    ./principal "$1" "histo" "$3"
+    ./prog "$1" "histo" "$3"
     retour=$?
 fi    
 
@@ -86,7 +86,7 @@ if [ "$2" = "leaks" ]; then
         exit 1
     fi    
         echo "le troisième argument est l'identifiant de l'usine."
-        ./principal "$1" "leaks" "$3"
+        ./prog "$1" "leaks" "$3"
         retour=$?
 fi
 
