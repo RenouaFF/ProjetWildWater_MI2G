@@ -1,4 +1,4 @@
-/* #Makefile 1:
+/* Makefile 1:
 
 #prog est l'executable
 all : prog 
@@ -45,7 +45,7 @@ clean :
 
 CC = gcc
 CFLAGS = -Wall -Wextra -Iheaders
-EXEC = principal
+EXEC = prog
 
 SRC = $(wildcard src/*.c)
 OBJ = $(SRC:.c=.o)
