@@ -1,6 +1,8 @@
 #!/bin/bash
 set -euo pipefail
 
+debut=$(date +%s)
+
 action="${1:-}"
 valeur="${2:-}"
 
@@ -86,3 +88,5 @@ else
   echo "Erreur: action invalide '$action' (attendu: hist ou leaks)"
   exit 1
 fi
+fin=$(date +%s)
+echo "Temps d'exécution : $((fin - debut)) secondes"
