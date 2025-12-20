@@ -11,29 +11,26 @@ synthèse de données d’un système de distribution d’eau.
 
 Deux types d’analyses sont possibles :
 
-* **Histogrammes (`histo`)**
+* **Histogrammes (`hist`)**
 * **Fuites (`leaks`)**
 
 Les résultats sont filtrés, triés et visualisés automatiquement.
 
 ---
 
-## 📂 Organisation du projet
+## Organisation du projet
 
 ```
 ├── src/
-│   ├── principal.c
 │   ├── avl.c
 │   └── arbre.c
 │
 ├── headers/
 │   ├── avl.h
 │   └── arbre.h
-│
+|__principal.c
 ├── Makefile
 ├── myScript.sh
-├── tmp/
-├── graphs/
 ├── test/
 └── README.md
 ```
@@ -54,10 +51,9 @@ Vérification :
 ```bash
 gnuplot --version
 ```
-
 ---
 
-## 2 - ▶️ Compilation
+## 2 - Compilation
 
 1) cloner le projet
 ```bash
@@ -74,68 +70,42 @@ chmod +x myScript.sh
 3) exécution 
 
 ```bash
-./prog <fichier_données> <mode> <type>
+./myScript.sh <action> <valeur>
 ```
-
 ---
 
-## 🖤 <mode> `histo` (Histogrammes)
+## <mode> `hist` (Histogrammes)
 
 ```bash
-./prog c-wildwater_v3.dat histo <type>
+./myScript.sh hist max
 ```
 
-### 🖤 <types> disponibles
+### <valeur> disponibles
 
-* `src`  → histogramme des sources
-* `max`  → valeurs maximales
-* `real` → valeurs réelles
+* `src`  → selon les volumes captés des usines
+* `max`  → selon les capacités maximales des usines
+* `real` → selon les volumes traités des usines
 
-### 📁 Résultats générés
+### Résultats générés
 
+* Histogramme des usines selon **src/max/real**
 * Histogramme des **50 plus petites usines**
 * Histogramme des **10 plus grandes usines**
 
-📂 Stockés dans :
 
-```text
-graphs/
-├── histo_<type>_petit.png
-└── histo_<type>_grand.png
-```
-
----
-
-## 🖤 <mode> `leaks` (Fuites)
+## <action> `leaks` (Fuites)
 
 ```bash
-./prog c-wildwater_v3.dat leaks <identifiant_usine>
+./myScript.sh leaks <identifiant_usine>
 ```
 
-### 📁 Résultat
+### Résultat
 
-* Génération du fichier `leaks.dat`
-* Stocké dans le dossier `tmp/`
+* Génération du fichier `rendements.dat`
 
 ---
 
-## Gestion des fichiers temporaires
-
-Les fichiers intermédiaires sont automatiquement déplacés dans :
-
-```text
-tmp/
-```
-
-Cela inclut :
-
-* fichiers `.csv`
-* fichiers `.dat`
-* scripts gnuplot `.gp`
-
----
-
-## ⏱️ Temps d’exécution
+## Temps d’exécution
 
 Le script mesure automatiquement le temps total d’exécution :
 
