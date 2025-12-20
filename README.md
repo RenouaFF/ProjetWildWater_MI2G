@@ -1,6 +1,6 @@
-# 📊 Projet C-wildwater
+# Projet C-wildwater
 
-## 📌 Description du projet
+# Description du projet
 
 Ce projet est un programme permettant de faire la
 synthèse de données d’un système de distribution d’eau.
@@ -21,20 +21,26 @@ Les résultats sont filtrés, triés et visualisés automatiquement.
 ## 📂 Organisation du projet
 
 ```
-.
+├── src/
+│   ├── principal.c
+│   ├── avl.c
+│   └── arbre.c
+│
+├── headers/
+│   ├── avl.h
+│   └── arbre.h
+│
 ├── Makefile
-├── principal          # Programme C compilé
-├── script.sh          # Script Bash principal
-├── tmp/               # Fichiers temporaires (csv, dat, scripts gnuplot)
-├── graphs/            # Graphiques générés (.png)
+├── myScript.sh
+├── tmp/
+├── graphs/
+├── test/
 └── README.md
 ```
 
 ---
 
-## ⚙️ Prérequis
-
-### 🧰 Outils nécessaires
+# Prérequis
 
 ### 1 - Installation de gnuplot
 
@@ -65,7 +71,7 @@ chmod +x myScript.sh
 ```
 ---
 
-### 📌 Syntaxe générale
+3) exécution 
 
 ```bash
 ./prog <fichier_données> <mode> <type>
@@ -73,15 +79,13 @@ chmod +x myScript.sh
 
 ---
 
-## 🔹 <mode> `histo` (Histogrammes)
-
-### 📌 Syntaxe
+## 🖤 <mode> `histo` (Histogrammes)
 
 ```bash
 ./prog c-wildwater_v3.dat histo <type>
 ```
 
-### 📊 <types> disponibles
+### 🖤 <types> disponibles
 
 * `src`  → histogramme des sources
 * `max`  → valeurs maximales
@@ -102,9 +106,7 @@ graphs/
 
 ---
 
-## 🔹 <mode> `leaks` (Fuites)
-
-### 📌 Syntaxe
+## 🖤 <mode> `leaks` (Fuites)
 
 ```bash
 ./prog c-wildwater_v3.dat leaks <identifiant_usine>
