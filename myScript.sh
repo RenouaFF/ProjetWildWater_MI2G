@@ -34,7 +34,7 @@ if [[ "$action" == "hist" ]]; then
   fi
 
   # Exécuter le programme C
-  ./programme "hist" "$valeur"
+  ./principal "hist" "$valeur"
 
   # Vérifier que le fichier de données existe
   if [[ ! -f "$donnee" ]]; then
@@ -82,7 +82,7 @@ elif [[ "$action" == "leaks" ]]; then
     exit 1
   fi
 
-  ./programme "leaks" "$valeur"
+  ./principal "leaks" "$valeur"
 
 else
   echo "Erreur: action invalide '$action' (attendu: hist ou leaks)"
