@@ -3,9 +3,12 @@
 #include <string.h>
 #include "avl.h"
 
+// Ici, vous trouverez toutes les fonctions utilisées pour la partie histogramme du projet
 
 int imax(int a, int b) { return (a > b) ? a : b; }
 int imin(int a, int b) { return (a < b) ? a : b; }
+
+//Fonctions AVL
 
 donnees* copie_donnees(const donnees* src) {
     if (!src) return NULL;
@@ -153,16 +156,4 @@ void stocker_histo(const avl* a,FILE* fichier, int info){
         }
     }
     stocker_histo(a->fg, fichier, info);
-}
-
-void afficher_abr(const avl* a) {
-    if (!a) return;
-    printf("ID=%-10s | eq=%2d | infos=(max=%.2f, capte=%.2f, traite=%.2f)\n",
-           a->ID,
-           a->equilibre,
-           a->infos ? a->infos->max : 0.0,
-           a->infos ? a->infos->capte : 0.0,
-           a->infos ? a->infos->traite : 0.0);
-    afficher_abr(a->fg);
-    afficher_abr(a->fd);
 }
