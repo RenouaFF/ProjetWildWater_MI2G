@@ -3,7 +3,7 @@
 #include <string.h>
 #include "arbre.h"
 
-NoeudReseau *creerNoeudReseau(char *id, TypeActeur type) {
+NoeudReseau *creerNoeudReseau(char *id, TypeActeur type, double taux_fuite) {
     NoeudReseau *n = malloc(sizeof(NoeudReseau));
     if (!n) return NULL;
 
@@ -15,38 +15,48 @@ NoeudReseau *creerNoeudReseau(char *id, TypeActeur type) {
 
     strcpy(n->donnees->id, id);
     n->donnees->type = type;
-    n->donnees->taux_fuite_amont = 0.0f;
-    n->donnees->volume_entrant = 0.0f;
+    n->donnees->taux_fuite = taux_fuite;
 
     n->parent = NULL;
-    n->tete_enfants = NULL;
-
+    n->enfants = NULL;
+    n->nb_enfants=0;
     return n;
 }
 
-void insertionNoeudReseau(NoeudReseau *parent, NoeudReseau *enfant) {
-    if (!parent || !enfant) return;
+void insertionNoeudReseau(NoeudReseau **parent, NoeudReseau *enfant) {
+    if (parent == NULL || *parent == NULL || enfant == NULL) return;
 
-    ListeEnfant *n = malloc(sizeof(ListeEnfant));
-    n->enfant = enfant;
-    n->suivant = parent->tete_enfants;
-    parent->tete_enfants = n;
+    NoeudReseau *p = *parent;
+    enfant->parent = p;
 
-    enfant->parent = parent;
+    // Agrandir le tableau des enfants de 1
+    NoeudReseau **nv = realloc(p->enfants, (p->nb_enfants + 1) * sizeof(NoeudReseau));
+    if (!nv) {
+        // échec realloc => ne pas modifier la structure
+        enfant->parent = NULL;
+        return;
+    }
+
+    p->enfants = nv;
+    p->enfants[p->nb_enfants] = enfant;
+    p->nb_enfants += 1;
 }
 
-void parcoursPostfixeReseau(NoeudReseau *racine) {
+void parcoursPostfixeReseau(NoeudReseau *racine, int profondeur) {
     if (racine == NULL)
         return;
-
-    ListeEnfant *courant = racine->tete_enfants;
-    while (courant != NULL) {
-        parcoursPostfixeReseau(courant->enfant);
-        courant = courant->suivant;
-    }
-    printf("Acteur %s | volume entrant = %.2f\n",
+    
+    for (int i = 0; i < profondeur; ++i) printf("  ");  // indentation
+    printf("%s (type=%d, fuite=%.4f, enfants=%d)\n",
            racine->donnees->id,
-           racine->donnees->volume_entrant);
+           (int)racine->donnees->type,
+           racine->donnees->taux_fuite,
+           racine->nb_enfants);
+
+    for(int i=0; i<racine->nb_enfants; i++){
+        parcoursPostfixeReseau(racine->enfants[i], profondeur + 1);
+    }
+    //printf("%s", racine->donnees->id);
 }
 
 AVLReseau *rotationDroiteReseau(AVLReseau *y) {
@@ -134,5 +144,21 @@ TypeActeur type_aval(TypeActeur t){
         case N_RACCORDEMENT: return N_USAGER;
         default:             return N_USAGER;
     }
+}
+
+float cumul_fuite(NoeudReseau* noeud, float v_arrive){
+    if(!noeud) return 0;
+
+    float fuite=v_arrive*(noeud->donnees->taux_fuite/100);
+    float v_restant=v_arrive-fuite;
+    if(noeud->nb_enfants==0 || noeud->donnees->type==N_USAGER){
+        return fuite;
+    }
+    float v_par_enfant=v_restant/(noeud->nb_enfants);
+    float total_fuite=fuite;
+    for(int i=0; i<(noeud->nb_enfants);i++){
+        total_fuite+=cumul_fuite(noeud->enfants[i],v_par_enfant);
+    }
+    return total_fuite;
 }
 
