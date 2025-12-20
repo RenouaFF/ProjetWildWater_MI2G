@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "avl.h"
-#include "avl.c"
-#include "arbre.h"
-#include "arbre.c"
+#include "Headers/avl.h"
+#include "Src/avl.c"
+#include "Headers/arbre.h"
+#include "Src/arbre.c"
 
 #define TAILLE_MAX_LIGNE 1024
 
@@ -239,3 +239,4 @@ int main(int argc, char *argv[]) {
     }
     return 0;
 }
+
