@@ -3,6 +3,10 @@
 #include <string.h>
 #include "arbre.h"
 
+// Ici, vous trouverez toutes les fonctions utilisées pour le calcul des rendements
+
+//Fonctions Noeud Reseau
+
 NoeudReseau *creerNoeudReseau(char *id, TypeActeur type, double taux_fuite) {
     NoeudReseau *n = malloc(sizeof(NoeudReseau));
     if (!n) return NULL;
@@ -42,23 +46,6 @@ void insertionNoeudReseau(NoeudReseau **parent, NoeudReseau *enfant) {
     p->nb_enfants += 1;
 }
 
-void parcoursPostfixeReseau(NoeudReseau *racine, int profondeur) {
-    if (racine == NULL)
-        return;
-    
-    for (int i = 0; i < profondeur; ++i) printf("  ");  // indentation
-    printf("%s (type=%d, fuite=%.4f, enfants=%d)\n",
-           racine->donnees->id,
-           (int)racine->donnees->type,
-           racine->donnees->taux_fuite,
-           racine->nb_enfants);
-
-    for(int i=0; i<racine->nb_enfants; i++){
-        parcoursPostfixeReseau(racine->enfants[i], profondeur + 1);
-    }
-    //printf("%s", racine->donnees->id);
-}
-
 AVLReseau *rotationDroiteReseau(AVLReseau *y) {
     AVLReseau *x = y->gauche;
     AVLReseau *T2 = x->droite;
@@ -84,6 +71,8 @@ AVLReseau *rotationGaucheReseau(AVLReseau *x) {
 
     return y;
 }
+
+//Fonctions AVL Reseau
 
 AVLReseau *insertionAVLReseau(AVLReseau *racine,char *id,NoeudReseau *adresse, int *h) {
     if (racine == NULL) {
@@ -136,15 +125,7 @@ NoeudReseau *rechercheAVLReseau(AVLReseau *racine, char *id) {
         return rechercheAVLReseau(racine->droite, id);
 }
 
-TypeActeur type_aval(TypeActeur t){
-    switch (t) {
-        case N_USINE:        return N_STOCKAGE;
-        case N_STOCKAGE:     return N_JONCTION;
-        case N_JONCTION:     return N_RACCORDEMENT;
-        case N_RACCORDEMENT: return N_USAGER;
-        default:             return N_USAGER;
-    }
-}
+//Calculer le cumul des fuites de l'arbre
 
 float cumul_fuite(NoeudReseau* noeud, float v_arrive){
     if(!noeud) return 0;
