@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-debut=$(date +%s)
+start=$(date +%s)
 
 action="${1:-}"
 valeur="${2:-}"
@@ -21,13 +21,10 @@ if [[ "$action" == "hist" ]]; then
   # Choisir fichier + image selon valeur
   if [[ "$valeur" == "max" ]]; then
     donnee="vol_max.dat"
-    sortie="histo_max.png"
   elif [[ "$valeur" == "src" ]]; then
     donnee="vol_capte.dat"
-    sortie="histo_src.png"
   elif [[ "$valeur" == "real" ]]; then
     donnee="vol_traite.dat"
-    sortie="histo_real.png"
   else
     echo "Erreur: valeur hist invalide: '$valeur' (attendu: max|src|real)"
     exit 1
@@ -45,19 +42,14 @@ if [[ "$action" == "hist" ]]; then
   tail -n +2 "$donnee" | sort -t';' -k2,2n > triees.dat
   {
     head -n 1 "$donnee"
-    head -n 50 triees.dat
     tail -n 10 triees.dat
   } > histo.txt
   rm triees.dat
-
-
-
   awk -F';' 'NR>1 {print "\"" $1 "\"",$2}' histo.txt > data.dat
-
   # Générer le bar chart
   gnuplot << EOF
 set terminal png size 1000,600
-set output "$sortie"
+set output "histo_plus_grandes.png"
 
 set title "Volume par usine ($valeur)"
 set xlabel "Usines"
@@ -68,13 +60,39 @@ set style fill solid 0.8
 set boxwidth 0.6
 
 set grid ytics
-set xtics rotate by -45
+set xtics rotate by -90 font ",9"
 
 plot "data.dat" using 2:xtic(1) notitle
 EOF
 
 
-  echo "Diagramme généré : $sortie"
+tail -n +2 "$donnee" | sort -t';' -k2,2n > triees.dat
+  {
+    head -n 1 "$donnee"
+    head -n 50 triees.dat
+  } > histo.txt
+  rm triees.dat
+  awk -F';' 'NR>1 {print "\"" $1 "\"",$2}' histo.txt > data.dat
+  # Générer le bar chart
+  gnuplot << EOF
+set terminal png size 1000,600
+set output "histo_plus_petites.png"
+
+set title "Volume par usine ($valeur)"
+set xlabel "Usines"
+set ylabel "Volume"
+
+set style data histograms
+set style fill solid 0.8
+set boxwidth 0.6
+
+set grid ytics
+set xtics rotate by -90 font ",9"
+
+plot "data.dat" using 2:xtic(1) notitle
+EOF
+  echo "Diagramme généré"
+  
 
 elif [[ "$action" == "leaks" ]]; then
   if [[ -z "$valeur" ]]; then
@@ -88,5 +106,6 @@ else
   echo "Erreur: action invalide '$action' (attendu: hist ou leaks)"
   exit 1
 fi
-fin=$(date +%s)
-echo "Temps d'exécution : $((fin - debut)) secondes"
+
+end=$(date +%s)
+echo "Temps d'exécution : $((end - start)) secondes"
