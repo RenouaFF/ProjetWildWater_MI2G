@@ -39,6 +39,4 @@ avl* insertionAVL(avl* a, const char* id, const donnees* infos, int* h);
 void recherche(avl* racine, const char* id);
 void afficher_abr(const avl* a);
 
-
-
 #endif
