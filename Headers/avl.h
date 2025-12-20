@@ -5,13 +5,17 @@
 #include <stdlib.h>
 #include <string.h>
 
-//Structures de données
+//Structures de données pour la partie histogramme du projet
+
+//Structure pour les données de l'arbre
 
 typedef struct{
     double max;
     double capte;
     double traite;
 } donnees;
+
+//Structure AVL
 
 typedef struct avl_struct{
     char ID[30];
@@ -20,7 +24,6 @@ typedef struct avl_struct{
     struct avl_struct* fg;
     struct avl_struct* fd;
 } avl;
-
 
 // Fonctions AVL 
 
@@ -37,6 +40,6 @@ avl* equilibrage(avl* a, int* h);
 avl* rechercheAVL(avl* a, const char* id);
 avl* insertionAVL(avl* a, const char* id, const donnees* infos, int* h);
 void recherche(avl* racine, const char* id);
-void afficher_abr(const avl* a);
+void stocker_histo(const avl* a,FILE* fichier, int info);
 
 #endif
