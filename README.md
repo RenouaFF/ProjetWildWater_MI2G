@@ -28,10 +28,11 @@ Les résultats sont filtrés, triés et visualisés automatiquement.
 ├── headers/
 │   ├── avl.h
 │   └── arbre.h
-|__principal.c
+├── principal.c
 ├── Makefile
 ├── myScript.sh
 ├── test/
+├── test v3/
 └── README.md
 ```
 
