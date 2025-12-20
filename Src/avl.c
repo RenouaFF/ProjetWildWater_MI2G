@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "avl.h"
+#include "../Headers/avl.h"
 
 // Ici, vous trouverez toutes les fonctions utilisées pour la partie histogramme du projet
 
@@ -157,3 +157,4 @@ void stocker_histo(const avl* a,FILE* fichier, int info){
     }
     stocker_histo(a->fg, fichier, info);
 }
+
