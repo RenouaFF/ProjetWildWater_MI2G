@@ -129,13 +129,30 @@ void recherche(avl* racine, const char* id) {
     if (!n) {
         printf("%s : Non trouvé\n", id);
     } else {
-        printf("s : Trouvé (max=%.2f capte=%.2f traite=%.2f, eq=%d)\n",
+        printf("%s : Trouvé (max=%.2f capte=%.2f traite=%.2f, eq=%d)\n",
                id,
                n->infos ? n->infos->max : 0.0,
                n->infos ? n->infos->capte : 0.0,
                n->infos ? n->infos->traite : 0.0,
                n->equilibre);
     }
+}
+
+void stocker_histo(const avl* a,FILE* fichier, int info){
+    if (!a) return;
+    stocker_histo(a->fd, fichier, info);
+    if (a->infos) {
+        if(info == 1){
+            fprintf(fichier,   "%s;%.2f\n", a->ID, a->infos->max);
+        }
+        else if(info == 2){
+            fprintf(fichier,   "%s;%.2f\n", a->ID, a->infos->capte);
+        }
+        else if(info == 3){
+            fprintf(fichier,   "%s;%.2f\n", a->ID, a->infos->traite);
+        }
+    }
+    stocker_histo(a->fg, fichier, info);
 }
 
 void afficher_abr(const avl* a) {
