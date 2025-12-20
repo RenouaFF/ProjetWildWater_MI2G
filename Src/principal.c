@@ -6,8 +6,6 @@
 #include "arbre.h"
 #include "arbre.c"
 
-
-#define SEPARATEUR ";"
 #define TAILLE_MAX_LIGNE 1024
 
 //Structure de donnée
@@ -20,7 +18,7 @@ typedef struct ligne_struct{
     char fuite[30];
 }ligne_csv;
 
-//Convertir une chaine de caractere en structure ligne_csv
+//Converti une chaine de caractere en structure ligne_csv
 
 int parse_ligne(const char *ligne, ligne_csv *res) {
     if (sscanf(ligne,
@@ -35,10 +33,7 @@ int parse_ligne(const char *ligne, ligne_csv *res) {
     return 0;
 }
 
-// Parcourir le fichier et remplir avl avec les infos de l'usine 
-
-void parcours_fichier(char* nom_fichier, avl** arbre, AVLReseau** avl_reseau){ 
-
+void construire_histogramme(char* nom_fichier, avl** arbre){
     FILE* fichier = fopen(nom_fichier, "r");
     if (!fichier){
         perror("Erreur ouverture fichier");
@@ -46,7 +41,7 @@ void parcours_fichier(char* nom_fichier, avl** arbre, AVLReseau** avl_reseau){
     }
 
     char ligne[TAILLE_MAX_LIGNE];
-    int h;
+    int h=0;
 
     while (fgets(ligne, sizeof(ligne), fichier)) {
         if (ligne[0] == '\n' || ligne[0] == '\0')
@@ -58,62 +53,143 @@ void parcours_fichier(char* nom_fichier, avl** arbre, AVLReseau** avl_reseau){
         //Ligne = usine
         if (strcmp(l.ID, "-") == 0 && strcmp(l.aval, "-") == 0) {
             donnees* d = malloc(sizeof(donnees));
-            d->max = atof(l.volume); // atof : convertir chaine de caractère en val numérique
+            d->max = atof(l.volume);
             d->capte = 0;
             d->traite = 0;
             *arbre= insertionAVL(*arbre, l.amont, d, &h);
         
         //Ligne = src->usine    
-        }else if (strcmp(l.ID, "-") == 0 && strcmp(l.amont, "-") != 0 && strcmp(l.aval, "-") != 0) { 
+        }else if (strcmp(l.ID, "-") == 0 && strcmp(l.volume, "-") != 0) {
             double volume_source = atof(l.volume);
             double pourcentage_fuite = atof(l.fuite);
-            //Mise à jour des informations de l'usine si elle existe déjà
             avl* res= rechercheAVL(*arbre, l.aval);
             if (res) {
                 res->infos->capte += volume_source;
                 res->infos->traite += volume_source * (1 - pourcentage_fuite / 100.0);
             }
-            //Construction réseau 
-        }if (strcmp(l.ID, "-") == 0 && strcmp(l.amont, "-") != 0 && strcmp(l.aval, "-") == 0) {
-            int h2 = 0;
-            NoeudReseau *usine = rechercheAVLReseau(*avl_reseau, l.amont);
+        }
+    }
+}
 
-            if (usine == NULL) {
-                usine = creerNoeudReseau(l.amont, N_USINE);
-                usine->donnees->volume_entrant = atof(l.volume);
-                *avl_reseau = insertionAVLReseau(*avl_reseau, l.amont, usine, &h2);
+void parcours_fichier(char* nom_fichier, NoeudReseau** arbre, avl * usine){ 
+
+    FILE* fichier = fopen(nom_fichier, "r");
+    if (!fichier){
+        perror("Erreur ouverture fichier");
+        return;
+    }
+
+    char ligne[TAILLE_MAX_LIGNE];
+    int h=0;
+
+    NoeudReseau *racine = creerNoeudReseau(usine->ID, N_USINE,0);
+    *arbre = racine;
+
+    AVLReseau *avl_reseau = NULL;
+    avl_reseau = insertionAVLReseau(avl_reseau, usine->ID, racine, &h);
+
+    while (fgets(ligne, sizeof(ligne), fichier)) {
+        if (ligne[0] == '\n' || ligne[0] == '\0')
+            continue;
+        ligne_csv l;
+        if (parse_ligne(ligne, &l)==0) {
+            break;
+        }
+        if (strcmp(l.ID, "-") == 0 && strncmp(l.aval, "Storage", 7) == 0) {
+            if (strcmp(l.amont, usine->ID) == 0) {
+                TypeActeur type = N_STOCKAGE;
+                NoeudReseau *enfant = creerNoeudReseau(l.aval, type, atof(l.fuite));
+                NoeudReseau *parent = rechercheAVLReseau(avl_reseau, l.amont);
+                if(parent){
+                    avl_reseau = insertionAVLReseau(avl_reseau, l.aval, enfant, &h);
+                    insertionNoeudReseau(&parent, enfant);
+                }
             }
-        }else if (strcmp(l.amont, "-") != 0 && strcmp(l.aval, "-") != 0) {
-            int h2 = 0;
-            // Recherche du parent (si déjà existant) et création de l'enfant
-            NoeudReseau *parent = rechercheAVLReseau(*avl_reseau, l.amont);
-            if (parent == NULL) continue;
-            NoeudReseau *enfant = rechercheAVLReseau(*avl_reseau, l.aval);
-            if (enfant == NULL) {
-                TypeActeur type_enfant = type_aval(parent->donnees->type);
-                enfant = creerNoeudReseau(l.aval, type_enfant);
-                *avl_reseau = insertionAVLReseau(*avl_reseau, l.aval, enfant, &h2);
+        }
+        else if (strcmp(l.ID, "-") != 0 && strcmp(l.ID, usine->ID) == 0) {
+    
+            TypeActeur type_aval;
+            
+            if (strncmp(l.aval, "Junction", 8) == 0) {
+                type_aval = N_JONCTION;
+            } 
+            else if (strncmp(l.aval, "Service", 7) == 0) {
+                type_aval = N_RACCORDEMENT;
+            } 
+            else if (strncmp(l.aval, "Cust", 4) == 0) {
+                type_aval = N_USAGER;
             }
-            insertionNoeudReseau(parent, enfant);
-            //Mise à jour des fuites
-            if (strcmp(l.fuite, "-") != 0){
-                enfant->donnees->taux_fuite_amont = atof(l.fuite);
+            
+            NoeudReseau *parent = rechercheAVLReseau(avl_reseau, l.amont);
+            if(parent){
+                NoeudReseau *enfant = creerNoeudReseau(l.aval, type_aval, strtod(l.fuite, 0));
+                avl_reseau = insertionAVLReseau(avl_reseau, l.aval, enfant, &h);
+                insertionNoeudReseau(&parent, enfant);
             }
         }
     }
     fclose(fichier);
 }
 
-int main() {
+
+
+int main(int argc, char *argv[]) {
     avl *racine = NULL;
-    AVLReseau *avl_reseau = NULL;
-    parcours_fichier("c-wildwater_v0.dat", &racine, &avl_reseau);
-    printf("\nArbre des usines (AVL) après insertions :\n");
-    afficher_abr(racine);
-    printf("\nParcours postfixe du réseau :\n");
-    if (avl_reseau != NULL) {
-        NoeudReseau *racine_reseau = avl_reseau->adresse;
-        parcoursPostfixeReseau(racine_reseau);
+    NoeudReseau *arbre=NULL;
+    construire_histogramme("c-wildwater_v0.dat", &racine);
+    if(argc == 3){
+        if(strcmp(argv[1], "hist")==0){
+            if(strcmp(argv[2], "max")==0){
+                FILE* fichier    = fopen("vol_max.dat", "w");
+                if (!fichier) {
+                    perror("Erreur ouverture fichiers sortie");
+                    if (fichier) fclose(fichier);
+                    return 0;
+                }
+                fprintf(fichier,    "id_usine;volume_max\n");
+                stocker_histo(racine, fichier, 1);
+            }
+            else if(strcmp(argv[2], "src")==0){
+                FILE* fichier    = fopen("vol_capte.dat", "w");
+                if (!fichier) {
+                    perror("Erreur ouverture fichiers sortie");
+                    if (fichier) fclose(fichier);
+                    return 0;
+                }
+                fprintf(fichier,  "id_usine;volume_capte\n");
+                stocker_histo(racine, fichier, 2);
+            }
+            else if(strcmp(argv[2], "real")==0){
+                FILE* fichier    = fopen("vol_traite.dat", "w");
+                if (!fichier) {
+                    perror("Erreur ouverture fichiers sortie");
+                    if (fichier) fclose(fichier);
+                    return 0;
+                }
+                fprintf(fichier,    "id_usine;volume_traite\n");
+                stocker_histo(racine, fichier, 3);
+            }
+        }
+        else if (strcmp(argv[1], "leaks")==0){
+            if(strcmp(argv[2], "")!=0){
+                avl* usine= rechercheAVL(racine, argv[2]);
+                if(usine){
+                    parcours_fichier("data.dat", &arbre, usine);
+                    double fuite=cumul_fuite(arbre, usine->infos->traite);
+                    FILE* f = fopen("rendements.dat", "a");
+                    if (!f){
+                        perror("Erreur ouverture rendements.dat");
+                        return 0;
+                    }
+                    fprintf(f, "%s;%.3f\n", usine->ID, fuite);
+                    fclose(f);
+                }
+            }
+        }
+        else{
+            printf("erreur");
+        }
+
     }
     return 0;
 }
