@@ -5,7 +5,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef enum{
+//Structure pour les types d'acteurs
+
+typedef enum {
     N_USINE,        
     N_STOCKAGE,     
     N_JONCTION,     
@@ -30,6 +32,8 @@ typedef struct noeud_reseau {
     int nb_enfants;
 } NoeudReseau;
 
+//Structure arbre AVL pour rechercher le parent d'un noeud en O(log(n))
+
 typedef struct avl_reseau {
     char id[50];
     NoeudReseau *adresse;
@@ -42,12 +46,10 @@ typedef struct avl_reseau {
 
 NoeudReseau *creerNoeudReseau(char *id, TypeActeur type, double taux_fuite);
 void insertionNoeudReseau(NoeudReseau **parent, NoeudReseau *enfant);
-void parcoursPostfixeReseau(NoeudReseau *racine, int profondeur) ;
 AVLReseau *rotationDroiteReseau(AVLReseau *y);
 AVLReseau *rotationGaucheReseau(AVLReseau *x);
 AVLReseau *insertionAVLReseau(AVLReseau *racine,char *id,NoeudReseau *adresse, int *h);
 NoeudReseau *rechercheAVLReseau(AVLReseau *racine, char *id);
-TypeActeur type_aval(TypeActeur t);
 float cumul_fuite(NoeudReseau* noeud, float v_arrive);
 
 #endif
