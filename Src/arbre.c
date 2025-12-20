@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "arbre.h"
+#include "../Headers/arbre.h"
 
 // Ici, vous trouverez toutes les fonctions utilisées pour le calcul des rendements
 
@@ -142,4 +142,5 @@ float cumul_fuite(NoeudReseau* noeud, float v_arrive){
     }
     return total_fuite;
 }
+
 
