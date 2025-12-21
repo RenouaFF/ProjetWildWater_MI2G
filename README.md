@@ -64,21 +64,21 @@ cd ProjetWildWater_MI2G
 
 2) rendre le script executable 
 ```bash
-chmod +x myScript.sh
+chmod +x script.sh
 ```
 ---
 
 3) exécution 
 
 ```bash
-./myScript.sh <action> <valeur>
+./script.sh <action> <valeur>
 ```
 ---
 
 ## <mode> `hist` (Histogrammes)
 
 ```bash
-./myScript.sh hist max
+./script.sh hist max
 ```
 
 ### <valeur> disponibles
