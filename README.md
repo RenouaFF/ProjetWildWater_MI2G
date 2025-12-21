@@ -21,18 +21,21 @@ Les résultats sont filtrés, triés et visualisés automatiquement.
 ## Organisation du projet
 
 ```
-├── src/
+├── Src/
 │   ├── avl.c
+├── ├── avl.o
+├── ├── arbre.o
 │   └── arbre.c
 │
-├── headers/
+├── Headers/
 │   ├── avl.h
 │   └── arbre.h
 ├── principal.c
 ├── Makefile
-├── myScript.sh
+├── script.sh
 ├── test/
 ├── test v3/
+├── rendements.dat
 └── README.md
 ```
 
