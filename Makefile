@@ -1,20 +1,18 @@
 CC = gcc
-SORTIE = principal
-SRC = principal.c
+CFLAGS = -Wall -Wextra -O2
 
-# Fichiers générés à supprimer
-FICHIERS = vol_max.dat vol_capte.dat vol_traite.dat rendements.dat histo.txt data.dat
+EXEC = prog
 
-.PHONY: all run clean
+SRC = principal.c Src/avl.c Src/arbre.c
+OBJ = $(SRC:.c=.o)
 
-all: run
+.PHONY: all clean
 
-$(SORTIE): $(SRC)
-	$(CC) $(SRC) -o $(SORTIE)
+all: $(EXEC)
 
-run: $(TARGET)
-	./$(SORTIE)
-	$(MAKE) clean
+$(EXEC): $(OBJ)
+	$(CC) $(CFLAGS) -o $(EXEC) $(OBJ)
 
 clean:
-	rm -f $(SORTIE) *.o $(FICHIERS)
+	rm -f $(OBJ) $(EXEC)
+
