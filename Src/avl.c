@@ -75,6 +75,7 @@ avl* rotationGaucheDroite(avl* a) {
 }
 
 avl* equilibrage(avl* a, int* h) {
+    (void)h;
     if (!a) return NULL;
 
     if (a->equilibre == 2) {
@@ -157,4 +158,3 @@ void stocker_histo(const avl* a,FILE* fichier, int info){
     }
     stocker_histo(a->fg, fichier, info);
 }
-
