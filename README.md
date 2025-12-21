@@ -1,5 +1,17 @@
 # Projet C-wildwater
 
+## Sommaire
+- Description du projet
+- Organisation du projet
+- Prérequis
+  - Installation de gnuplot
+  - Compilation et exécution
+    - Modes d’analyse
+    - Mode histo (Histogrammes)
+    - Mode leaks (Fuites)
+- Temps d’exécution
+- Contributeurs
+
 # Description du projet
 
 Ce projet est un programme permettant de faire la
@@ -28,11 +40,11 @@ Les résultats sont filtrés, triés et visualisés automatiquement.
 │   ├── avl.c
 │   └── arbre.c
 ├── graphs/
-├── test (version v0 et v3)/
+├── test (version v0)/
+├── test v3/
 ├── Makefile
-├── README.md
 ├── c-wildwater_v0.dat
-├── principal
+├── principal.c
 ├── script.sh
 ├── rendements.dat
 ├── histo_(max/src/real).dat
@@ -79,13 +91,13 @@ chmod +x script.sh
 ```
 ---
 
-## <mode> `hist` (Histogrammes)
+## `<action>` `hist` (Histogrammes)
 
 ```bash
-./script.sh hist max
+./script.sh hist <valeur>
 ```
 
-### <valeur> disponibles
+### `<valeur>` disponibles
 
 * `src`  → selon les volumes captés des usines
 * `max`  → selon les capacités maximales des usines
@@ -98,7 +110,7 @@ chmod +x script.sh
 * Histogramme des **10 plus grandes usines**
 
 
-## <action> `leaks` (Fuites)
+## `<action>` `leaks` (Fuites)
 
 ```bash
 ./myScript.sh leaks <identifiant_usine>
@@ -117,3 +129,11 @@ Le script mesure automatiquement le temps total d’exécution :
 ```text
 Durée : X secondes
 ```
+--- 
+
+## Contributeurs 
+
+Groupe MI2-G :
+Belquass Hajar
+Xerri Sarah
+Fassi fehri Renoua
