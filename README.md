@@ -86,14 +86,14 @@ chmod +x script.sh
 3) exécution 
 
 ```bash
-./script.sh <action> <valeur>
+./script.sh <nom_fichier> <action> <valeur>
 ```
 ---
 
 ## `<action>` `hist` (Histogrammes)
 
 ```bash
-./script.sh hist <valeur>
+./script.sh <nom_fichier> histo <valeur>
 ```
 
 ### `<valeur>` disponibles
@@ -112,7 +112,7 @@ chmod +x script.sh
 ## `<action>` `leaks` (Fuites)
 
 ```bash
-./myScript.sh leaks <identifiant_usine>
+./script.sh <nom_fichier> leaks <identifiant_usine>
 ```
 
 ### Résultat
