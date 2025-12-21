@@ -23,7 +23,7 @@ synthèse de données d’un système de distribution d’eau.
 
 Deux types d’analyses sont possibles :
 
-* **Histogrammes (`hist`)**
+* **Histogrammes (`histo`)**
 * **Fuites (`leaks`)**
 
 Les résultats sont filtrés, triés et visualisés automatiquement.
