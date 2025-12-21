@@ -31,7 +31,7 @@ int imax(int a, int b);
 int imin(int a, int b);
 donnees* copie_donnees(const donnees* src);
 void liberer_noeud(avl* n);
-static avl* nouveau_noeud(const char* id, const donnees* infos);
+//static avl* nouveau_noeud(const char* id, const donnees* infos);
 avl* rotationGauche(avl* a);
 avl* rotationDroite(avl* a);
 avl* rotationDroiteGauche(avl* a);
