@@ -18,24 +18,25 @@ Les résultats sont filtrés, triés et visualisés automatiquement.
 
 ---
 
-## Organisation du projet
+## Organisation du projet (après execution)
 
 ```
-├── Src/
-│   ├── avl.c
-├── ├── avl.o
-├── ├── arbre.o
-│   └── arbre.c
-│
 ├── Headers/
 │   ├── avl.h
 │   └── arbre.h
-├── principal.c
+├── Src/
+│   ├── avl.c
+│   └── arbre.c
+├── graphs/
+├── test (version v0 et v3)/
 ├── Makefile
+├── README.md
+├── c-wildwater_v0.dat
+├── principal
 ├── script.sh
-├── test/
-├── test v3/
 ├── rendements.dat
+├── histo_(max/src/real).dat
+├── Rapport
 └── README.md
 ```
 
