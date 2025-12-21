@@ -43,7 +43,6 @@ Les résultats sont filtrés, triés et visualisés automatiquement.
 ├── test (version v0)/
 ├── test v3/
 ├── Makefile
-├── c-wildwater_v0.dat
 ├── principal.c
 ├── script.sh
 ├── rendements.dat
@@ -134,6 +133,6 @@ Durée : X secondes
 ## Contributeurs 
 
 Groupe MI2-G :
-Belquass Hajar
-Xerri Sarah
-Fassi fehri Renoua
+- Belquass Hajar
+- Xerri Sarah
+- Fassi fehri Renoua
