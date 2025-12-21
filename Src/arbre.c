@@ -143,4 +143,3 @@ float cumul_fuite(NoeudReseau* noeud, float v_arrive){
     return total_fuite;
 }
 
-
